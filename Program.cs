@@ -27,8 +27,7 @@ class Program
                     int i = 0;
                     Int32.TryParse(Console.ReadLine(), out i);
                     if (i <= 0) {
-                        Console.WriteLine("Not a valid input. Any key to continue...");
-                        Console.ReadLine();
+                        NotValidInput();
                         break;
                     }
                     ReadMovies(moviesPath, i);
@@ -36,9 +35,11 @@ class Program
                 case "3":
                     WriteMovie(AddMovie());
                     break;
+                case "x":
                 case "X":
                     return;
                 default:
+                    NotValidInput();
                     continue;
             }
         } while (input.ToUpper() != "X");
@@ -46,6 +47,11 @@ class Program
 
     static string GetMenuText() {
         return "Movie Library:\n\n1) See all movies\n2) See a certain number of movies\n3) Add a movie\nX) Exit";
+    }
+
+    static void NotValidInput() {
+        Console.WriteLine("Not a valid input. Press enter to continue...");
+        Console.ReadLine();
     }
 
     static void ReadMovies(string path) {
@@ -125,7 +131,9 @@ class Program
 
     static int ParseIdFromLine(string line) {
         try {
-            return Convert.ToInt32(line.Split(',')[0]);
+            int lineId = 0;
+            Int32.TryParse(line.Split(',')[0], out lineId);
+            return lineId;
         } catch (Exception ex) {
             logger.Error(ex);
             return -1;
