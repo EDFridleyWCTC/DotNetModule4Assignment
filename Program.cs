@@ -3,19 +3,17 @@ using NLog;
 class Program
 {
     static int increment = -1;
+    static string path = Directory.GetCurrentDirectory() + "\\nlog.config";
+    static string moviesPath = Directory.GetCurrentDirectory() +"\\ml-latest-small\\movies.csv";
+
     static void Main(string[] args)
     {
-
-        string path = Directory.GetCurrentDirectory() + "\\nlog.config";
-        string moviesPath = Directory.GetCurrentDirectory() +"\\ml-latest-small\\movies.csv";
-
         var logger = LogManager.LoadConfiguration(path).GetCurrentClassLogger();
 
-        Console.WriteLine(NextId(moviesPath));
-        Menu(moviesPath);
+        Menu();
     }
 
-    static void Menu(string moviesPath) {
+    static void Menu() {
         string input = "";
         do {
             Console.WriteLine(GetMenuText());
@@ -85,16 +83,26 @@ class Program
         Console.WriteLine();
     }
 
-    static String AddMovie() {
-
-        return "";
+    static string AddMovie() {
+        string movie = NextId() + ",";
+        Console.Write("Please enter the name of the movie: ");
+        movie += Console.ReadLine();
+        string input = "Y";
+        do {
+            movie += ",";
+            Console.Write("Please enter a genre: ");
+            movie += Console.ReadLine();
+            Console.Write("Would you like to enter another genre? (Y or any other key to exit): ");
+            input = Console.ReadLine();
+        } while (input.ToUpper() == "Y");
+        return movie;
     }
 
     static void WriteMovie(string line) {
 
     }
 
-    static int NextId(string moviesPath) {
+    static int NextId() {
 
         if (increment < 0) {
             StreamReader sr = new StreamReader(moviesPath);
