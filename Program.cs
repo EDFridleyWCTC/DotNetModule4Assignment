@@ -78,28 +78,30 @@ class Program
         if (lineItems.Length == 4) {
             Console.Write("," + lineItems[2]);
         }
-        Console.WriteLine();
-        Console.WriteLine($"Genre: {lineItems[lineItems.Length - 1].Replace("|", ", ")}");
-        Console.WriteLine();
+        Console.WriteLine($"\nGenre: {lineItems[lineItems.Length - 1].Replace("|", ", ")}\n");
     }
 
     static string AddMovie() {
         string movie = NextId() + ",";
         Console.Write("Please enter the name of the movie: ");
-        movie += Console.ReadLine();
+        movie += Console.ReadLine() + ",";
         string input = "Y";
         do {
-            movie += ",";
             Console.Write("Please enter a genre: ");
             movie += Console.ReadLine();
             Console.Write("Would you like to enter another genre? (Y or any other key to exit): ");
             input = Console.ReadLine();
+            if (input.ToUpper() == "Y") {
+                movie += "|";
+            }
         } while (input.ToUpper() == "Y");
         return movie;
     }
 
     static void WriteMovie(string line) {
-
+        StreamWriter sw = new StreamWriter(moviesPath, append:true);
+        sw.WriteLine(line);
+        sw.Close();
     }
 
     static int NextId() {
