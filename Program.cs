@@ -5,11 +5,10 @@ class Program
     static int increment = -1;
     static string path = Directory.GetCurrentDirectory() + "\\nlog.config";
     static string moviesPath = Directory.GetCurrentDirectory() +"\\ml-latest-small\\movies.csv";
+    static Logger logger = LogManager.LoadConfiguration(path).GetCurrentClassLogger();
 
     static void Main(string[] args)
     {
-        var logger = LogManager.LoadConfiguration(path).GetCurrentClassLogger();
-
         Menu();
     }
 
@@ -51,6 +50,7 @@ class Program
 
     static void ReadMovies(string path) {
         StreamReader sr = new StreamReader(path);
+        sr.ReadLine();
         
         while (!sr.EndOfStream) {
             string line = sr.ReadLine();
@@ -61,6 +61,7 @@ class Program
 
     static void ReadMovies(string path, int max) {
         StreamReader sr = new StreamReader(path);
+        sr.ReadLine();
         
         int counter = 0;
         while (!sr.EndOfStream && counter < max) {
@@ -111,9 +112,7 @@ class Program
             
             int maxId = 0;
             while (!sr.EndOfStream) {
-                string line = sr.ReadLine();
-                int lineId = 0;
-                Int32.TryParse(line.Split(',')[0], out lineId);
+                int lineId = ParseIdFromLine(sr.ReadLine());
                 if (lineId > maxId) {
                     maxId = lineId;
                 }
@@ -122,5 +121,14 @@ class Program
             increment = maxId + 1;  
         }
         return increment++;
+    }
+
+    static int ParseIdFromLine(string line) {
+        try {
+            return Convert.ToInt32(line.Split(',')[0]);
+        } catch (Exception ex) {
+            logger.Error(ex);
+            return -1;
+        }
     }
 }
